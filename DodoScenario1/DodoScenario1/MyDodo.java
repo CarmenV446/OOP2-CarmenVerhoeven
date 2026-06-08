@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class MyDodo extends Dodo
 {
     private int myNrOfEggsHatched;
-    
+
     public MyDodo() {
         super( EAST );
         myNrOfEggsHatched = 0;
@@ -67,7 +67,7 @@ public class MyDodo extends Dodo
             showError( "There was no egg in this cell" );
         }
     }
-    
+
     /**
      * Returns the number of eggs Dodo has hatched so far.
      * 
@@ -76,7 +76,7 @@ public class MyDodo extends Dodo
     public int getNrOfEggsHatched() {
         return myNrOfEggsHatched;
     }
-    
+
     /**
      * Move given number of cells forward in the current direction.
      * 
@@ -94,8 +94,6 @@ public class MyDodo extends Dodo
         }
     }
 
-    
-    
     
     /**
      * Walks to edge of the world printing the coordinates at each step
@@ -130,12 +128,12 @@ public class MyDodo extends Dodo
             return true;
         }
     }  
-    
+
     public void turn180(){
         turnRight();
         turnRight();
     }
-    
+
     public void climbOverFence(){
         if (fenceAhead()){
             turnLeft();
@@ -148,7 +146,7 @@ public class MyDodo extends Dodo
             turnLeft();
         }
     }
-    
+
     public boolean grainAhead(){
         move();
         if (onGrain()){
@@ -161,35 +159,58 @@ public class MyDodo extends Dodo
             return false;
         }
     }
-    
+
     public void stepOneCellBackwards(){
         turn180();
         move();
         turn180();
     }
-    
+
     public void gotoEgg(){
         while (!onEgg()){
             move();
         }
     }
-    
+
     public void goBackToStartOfRowAndFaceBack(){
         turn180();
         walkToWorldEdge();
         turn180();
     }
-    
+
     public void walkToWorldEdgeClimbingOverFences(){
-     while (!borderAhead()){
-         if (fenceAhead()){
-             climbOverFence();
-         }
-         else{
-             move();
-         }
-     }
+        while (!borderAhead()){
+            if (fenceAhead()){
+                climbOverFence();
+            }
+            else if (onNest()){
+                layEgg();
+                move();
+            }
+            else {
+                move();
+            }
+        }
     }
     
-
+    public void walkAroundFencedArea(){
+        while (!onEgg()){
+            if(!fenceAhead()){
+                turnRight();
+            }
+            if (fenceAhead()== true){
+                turnLeft();
+                move();
+            }
+            else{
+                move();
+            }
+            
+            
+        }
+    }
 }
+
+    
+
+
