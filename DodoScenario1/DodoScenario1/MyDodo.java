@@ -227,13 +227,32 @@ public class MyDodo extends Dodo
     
     public void mazeTrailToNest(){
         while (!onNest()){
-            if (!fenceAhead()){
-                move();
-            }
-            else{
+            if (fenceAhead() || eggAhead()){
                 turnRight();
             }
+            else{
+                layEgg();
+                move();
+            }
         }
+    }
+
+    public void faceEast(){
+        setDirection(EAST);
+    }
+    
+    public void moveRandomly(){
+        int nrStepsTaken = 0;
+        while (nrStepsTaken < Mauritius.MAXSTEPS){
+            if (fenceAhead() || borderAhead()){
+                turnRight();
+        }
+            else {
+                setDirection(randomDirection());
+                move();
+                nrStepsTaken++;
+        }
+    }
     }
 }
 
