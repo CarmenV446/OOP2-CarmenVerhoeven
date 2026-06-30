@@ -10,6 +10,8 @@ public class MyDodo extends Dodo
 {
     private int myNrOfEggsHatched;
     private int nrStepsTaken = 0;
+    public int score = 0;
+
 
     public MyDodo() {
         super( EAST );
@@ -29,8 +31,8 @@ public class MyDodo extends Dodo
      */
     public void move() {
         if ( canMove() ) {
-            step();
             nrStepsTaken++;
+            step();
             System.out.println(nrStepsTaken);
         } else {
             showError( "I'm stuck!" );
@@ -260,32 +262,30 @@ public class MyDodo extends Dodo
     }
     }
     
-    public void checkForEgg(){
-        int turnNr = 0;
-        while (turnNr < 4)
-        if (eggAhead()){
-            move();
+    public void playGame(){
+        GoldenEgg goldenEgg = findGoldenEgg();
+        moveToLocation(goldenEgg.getX(), goldenEgg.getY());
+        addScore(goldenEgg.getValue());
+        hatchEgg();
+
+        List<BlueEgg> eggList = getListOfBlueEggs();
+
+        while (nrStepsTaken <= Mauritius.MAXSTEPS) {
+            BlueEgg closest = findClosestBlueEgg(eggList);
+            if (closest == null) break;
+            moveToLocation(closest.getX(), closest.getY());
+            addScore(closest.getValue());
+            removeCollectedEgg(eggList, closest);
             hatchEgg();
         }
-        else {
-            turnRight();
-            turnNr++;
 
-        }
-        
-    
+        System.out.println("Score: " + score);
+        System.out.println("Amount of eggs hatched: " + myNrOfEggsHatched);
+        Greenfoot.stop();
     }
     
-    public void playGame(){
-        while (nrStepsTaken < Mauritius.MAXSTEPS){
-            if (onEgg()){
-                hatchEgg();
-            }
-            else{
-            checkForEgg();
-            moveRandomly();
-        }
-    }
+        public void addScore(int value) {
+        score = score + value;
     }
     
         public List<BlueEgg> getListOfBlueEggs() {
@@ -302,7 +302,6 @@ public class MyDodo extends Dodo
         int myY = getY();
         int moveX = myX - inputX;
         int moveY = myY - inputY;
-        while (nrStepsTaken < 40){
         if (moveX > 0) {
             int i = 0;
             setDirection(WEST);
@@ -340,7 +339,29 @@ public class MyDodo extends Dodo
             setDirection(EAST);
         }
     }
+    
+    public BlueEgg findClosestBlueEgg(List<BlueEgg> eggList) {
+        int myX = getX();
+        int myY = getY();
+        BlueEgg closestEgg = null;
+        int shortestDistance = Integer.MAX_VALUE;
 
+        for (BlueEgg egg : eggList) {
+            int distanceX = Math.abs(egg.getX() - myX);
+            int distanceY = Math.abs(egg.getY() - myY);
+            int totalDistance = distanceX + distanceY;
+
+            if (totalDistance < shortestDistance) {
+                shortestDistance = totalDistance;
+                closestEgg = egg;
+            }
+        }
+
+        return closestEgg;
+    }
+    
+       public void removeCollectedEgg(List<BlueEgg> eggList, BlueEgg egg) {
+        eggList.remove(egg);
     }
     
 
