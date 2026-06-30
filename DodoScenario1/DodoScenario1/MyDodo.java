@@ -10,6 +10,7 @@ public class MyDodo extends Dodo
 {
     private int myNrOfEggsHatched;
     private int nrStepsTaken = 0;
+
     public MyDodo() {
         super( EAST );
         myNrOfEggsHatched = 0;
@@ -285,7 +286,6 @@ public class MyDodo extends Dodo
             moveRandomly();
         }
     }
-        
     }
     
         public List<BlueEgg> getListOfBlueEggs() {
@@ -295,6 +295,52 @@ public class MyDodo extends Dodo
         public GoldenEgg findGoldenEgg() {
         List<GoldenEgg> goldenEggs = getWorld().getObjects(GoldenEgg.class);
         return goldenEggs.get(0);
+    }
+    
+    public void moveToLocation(int inputX, int inputY) {
+        int myX = getX();
+        int myY = getY();
+        int moveX = myX - inputX;
+        int moveY = myY - inputY;
+        while (nrStepsTaken < 40){
+        if (moveX > 0) {
+            int i = 0;
+            setDirection(WEST);
+            while (i < moveX) {
+                move();
+                i++;
+            }
+            setDirection(EAST);
+        }
+        else if (moveX < 0) {
+            int i = 0;
+            setDirection(EAST);
+            while (i > moveX) {
+                move();
+                i--;
+            }
+            setDirection(EAST);
+        }
+        if (moveY > 0) {
+            int i = 0;
+            setDirection(NORTH);
+            while (i < moveY) {
+                move();
+                i++;
+            }
+            setDirection(EAST);
+        }
+        else if (moveY < 0) {
+            int i = 0;
+            setDirection(SOUTH);
+            while (i > moveY) {
+                move();
+                i--;
+            }
+            setDirection(EAST);
+        }
+    }
+
     }
     
 
