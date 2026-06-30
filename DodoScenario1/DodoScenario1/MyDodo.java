@@ -1,4 +1,5 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.List;
 
 /**
  *
@@ -8,10 +9,11 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class MyDodo extends Dodo
 {
     private int myNrOfEggsHatched;
-
+    private int nrStepsTaken = 0;
     public MyDodo() {
         super( EAST );
         myNrOfEggsHatched = 0;
+        
     }
 
     public void act() {
@@ -27,6 +29,8 @@ public class MyDodo extends Dodo
     public void move() {
         if ( canMove() ) {
             step();
+            nrStepsTaken++;
+            System.out.println(nrStepsTaken);
         } else {
             showError( "I'm stuck!" );
         }
@@ -60,7 +64,7 @@ public class MyDodo extends Dodo
      * <p> Final: Dodo is in the same cell. The egg has been removed (hatched).     
      */    
     public void hatchEgg () {
-        if ( onEgg() ) {
+        if (onEgg() ) {
             pickUpEgg();
             myNrOfEggsHatched++;
         } else {
@@ -258,31 +262,43 @@ public class MyDodo extends Dodo
     public void checkForEgg(){
         int turnNr = 0;
         while (turnNr < 4)
-        if (!eggAhead()){
-            turnRight();
-            turnNr++;
-        }
-        else {
+        if (eggAhead()){
             move();
             hatchEgg();
+        }
+        else {
+            turnRight();
+            turnNr++;
+
         }
         
     
     }
     
     public void playGame(){
-        int nrStepsTaken =0;
-        while (!borderAhead() || !fenceAhead()){
-            if (!eggAhead()){
+        while (nrStepsTaken < Mauritius.MAXSTEPS){
+            if (onEgg()){
+                hatchEgg();
+            }
+            else{
             checkForEgg();
-            move();
-        }
-        else {
-            turnRight();
+            moveRandomly();
         }
     }
         
     }
+    
+        public List<BlueEgg> getListOfBlueEggs() {
+        return getWorld().getObjects(BlueEgg.class);
+    }
+    
+        public GoldenEgg findGoldenEgg() {
+        List<GoldenEgg> goldenEggs = getWorld().getObjects(GoldenEgg.class);
+        return goldenEggs.get(0);
+    }
+    
+
+    
 }
 
     
